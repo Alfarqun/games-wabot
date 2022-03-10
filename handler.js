@@ -645,6 +645,25 @@ Untuk mematikan fitur ini, ketik
         this.copyNForward(msg.key.remoteJid, msg).catch(e => console.log(e, msg))
     }
 }*/
+async deleteUpdate(message) {
+        const { fromMe, id, participant } = message
+        if (fromMe)
+            return
+        let msg = this.serializeM(await this.loadMessage(id))
+        if (!msg)
+            return
+        let chat = global.db.data.chats[msg.chat] || {}
+        if (chat.delete)
+            return
+        await this.reply(msg.chat, `
+Terdeteksi @${participant.split`@`[0]} telah menghapus pesan
+Untuk mematikan fitur ini, ketik
+*.enable delete*
+`.trim(), msg, {
+            mentions: [participant]
+        })
+        this.copyNForward(msg.chat, msg).catch(e => console.log(e, msg))
+}
 export async function deleteUpdate(message) {
     try {
         const { fromMe, id, participant } = message
@@ -692,3 +711,24 @@ watchFile(file, async () => {
     console.log(chalk.redBright("Update 'handler.js'"))
     if (global.reloadHandler) console.log(await global.reloadHandler())
 })
+
+async deleteUpdate(message) {
+        const { fromMe, id, participant } = message
+        if (fromMe)
+            return
+        let msg = this.serializeM(await this.loadMessage(id))
+        if (!msg)
+            return
+        let chat = global.db.data.chats[msg.chat] || {}
+        if (chat.delete)
+            return
+        await this.reply(msg.chat, `
+Terdeteksi @${participant.split`@`[0]} telah menghapus pesan
+Untuk mematikan fitur ini, ketik
+*.enable delete*
+`.trim(), msg, {
+            mentions: [participant]
+        })
+        this.copynforward(msg.chat, msg).catch(e => console.log(e, msg))
+}
+}
